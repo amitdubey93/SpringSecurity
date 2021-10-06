@@ -1,12 +1,12 @@
 # In this project.
 
-## first Commit:
+## First Commit:
 
 1. We have added spring security, mvc and configured the project.
-2. Then created our login, signup, logout and dashboard for user and admin.
+2. Then created our own login, signup, logout and dashboard for user and admin.
 3. Added different api for access control check.
 3. Added default schema to database and loading user from there.
-4. Added Dao layer for signing up user by our oun dao method.
+4. Added Dao layer for signing up user by our own dao method.
 
 ## Second Commit:
 
