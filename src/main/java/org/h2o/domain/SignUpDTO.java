@@ -1,4 +1,4 @@
-package org.h2o.domian;
+package org.h2o.domain;
 
 
 public class SignUpDTO {

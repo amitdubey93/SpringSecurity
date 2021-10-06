@@ -14,8 +14,8 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 //this class is going to help you to create spring security filter chain.
-@EnableWebSecurity(debug = true)
-public class MySecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity(debug = false)
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private PasswordEncoder bcryptPasswordEncoder;
@@ -45,19 +45,14 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.authorizeRequests()
-//		.anyRequest().authenticated()
 		.antMatchers("/user").hasAuthority("USER")
 		.antMatchers("/admin").hasAuthority("ADMIN")
 		.antMatchers("/permitall").permitAll()
-//		.antMatchers("/resources/**").permitAll()
-//		.antMatchers("/permitall").permitAll()
-//		.antMatchers("/user").authenticated()
-//		.antMatchers("/admin").authenticated()
-//		.antMatchers("/denyall").denyAll()
-		.and().formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/dashboard", true)
+		.antMatchers("/denyall").denyAll()
+		.and().formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/user-dashboard", true)
 		.and().httpBasic()
 		.and().logout().logoutSuccessUrl("/login?logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll()
-		.and().exceptionHandling().accessDeniedPage("/accessdenied");
+		.and().exceptionHandling().accessDeniedPage("/accessdenied");	
 			
 	}
 	

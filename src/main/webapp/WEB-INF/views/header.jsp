@@ -9,7 +9,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="<c:url value="/dashboard" />">Dashboard</a>
+        <a class="nav-link" href="<c:url value="/user-dashboard" />">Dashboard</a>
       </li>
       <sec:authorize access="hasAuthority('USER')">
 	      <li class="nav-item">
@@ -26,10 +26,18 @@
 	        <a class="nav-link" href="<c:url value="/login" />">Login</a>
 	      </li>
       </sec:authorize>
-      
+      <li class="nav-item">
+        <a class="nav-link" href="<c:url value="/signup" />">Signup</a>
+      </li>
+       <li class="nav-item">
+        <a class="nav-link" href="<c:url value="/denyall" />">DENYALL</a>
+      </li>	
     </ul>
-    <c:if test="${param.logout==null}">
+    <a class="nav-link" href="<c:url value="/change-password" />">Change Password</a>
+    <!--this is not working  -->
+    <%-- <c:if test="${param.logout==null}">
     <%@ include file="./logout.jsp" %>
-    </c:if>
+    </c:if> --%>
+    
   </div>
 </nav>

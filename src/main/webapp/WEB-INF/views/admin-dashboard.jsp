@@ -9,15 +9,13 @@
 <head>
 <link href="<c:url value="/resources/css/bootstrap.css" />"
 	rel="stylesheet">
-<title>Dashboard</title>
+<title>Admin Dashboard</title>
 </head>
 <body>
 	<%@ include file="./header.jsp"%>
 	
 	<div>
 		Hi ${username}
-		<br>
-		roles ${authorities}
 	</div>
 
 </body>

@@ -13,25 +13,29 @@
 <body>
 <%@ include file="./header.jsp" %>
 	<div class="container p-4">
-		<h2 class="text-center">Signup Form</h2>
+		<h2 class="text-center">Change password</h2>
 		<div style="width: 40%; margin: auto;">
-			<form:form action="process-signup" method="POST"
-				modelAttribute="signupdto">
-				<%-- <c:if test="${param.error != null}">
-					<div class="alert alert-danger" role="alert">Invalid
-						Username or password !!</div>
-				</c:if> --%>
+			<c:if test="${param.error != null}">
+				<div class="alert alert-danger" role="alert">
+					${param.error}</div>
+			</c:if>
+			<form:form action="process-change-password" method="POST"
+				modelAttribute="cpdto">
 				<div class="form-group">
-					<label for="username">Username</label>
-					<form:input path="username" cssClass="form-control" />
+					<label for="oldPassword">Old Passowrd</label>
+					<form:input path="oldPassword" cssClass="form-control" />
 				</div>
 				<div class="form-group">
-					<label for="password">Password</label>
-					<form:input path="password" cssClass="form-control" />
+					<label for="newPassword">New Password</label>
+					<form:input path="newPassword" cssClass="form-control" />
+				</div>
+				<div class="form-group">
+					<label for="confirmPassword">Confirm Password</label>
+					<form:input path="confirmPassword" cssClass="form-control" />
 				</div>
 				<button type="submit" class="btn btn-primary">SignUp</button>
 			</form:form>
-		</div>	
+		</div>
 	</div>
 </body>
 </html>
