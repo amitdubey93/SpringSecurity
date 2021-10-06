@@ -1,6 +1,6 @@
-## In this project.
+# In this project.
 
-# first Commit:
+## first Commit:
 
 1. We have added spring security, mvc and configured the project.
 2. Then created our login, signup, logout and dashboard for user and admin.
