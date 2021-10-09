@@ -2,6 +2,7 @@ package org.h2o.config;
 
 import javax.sql.DataSource;
 
+import org.h2o.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,13 +13,18 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 //this class is going to help you to create spring security filter chain.
-@EnableWebSecurity(debug = false)
+@EnableWebSecurity(debug = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private PasswordEncoder bcryptPasswordEncoder;
+	
+//	@Autowired
+//	private UserDetailsServiceImpl userDetailsServiceImpl;
 	
 	@Autowired
 	private DataSource dataSource;
@@ -26,8 +32,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
+//		auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(bcryptPasswordEncoder);
+		
+		
 //		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(NoOpPasswordEncoder.getInstance());
-		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(bcryptPasswordEncoder);
+		
+		auth.jdbcAuthentication()
+		.dataSource(dataSource)
+		.usersByUsernameQuery("select username,password,enabled from user_details where username=?")
+		.authoritiesByUsernameQuery("select username,role from user_roles where username=?")
+		.passwordEncoder(bcryptPasswordEncoder);
 		
 		
 //		auth.inMemoryAuthentication().withUser("admin1").password(bcryptPasswordEncoder.encode("admin1")).roles("admin");
@@ -44,10 +58,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+//		.addFilterAfter(new InfoFilter(), BasicAuthenticationFilter.class)
 		.authorizeRequests()
 		.antMatchers("/user").hasAuthority("USER")
 		.antMatchers("/admin").hasAuthority("ADMIN")
-		.antMatchers("/permitall").permitAll()
+		.antMatchers("/user-dashboard","/change-password").authenticated()
+//		.antMatchers("/permitall").permitAll()
 		.antMatchers("/denyall").denyAll()
 		.and().formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/user-dashboard", true)
 		.and().httpBasic()
@@ -55,6 +71,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and().exceptionHandling().accessDeniedPage("/accessdenied");	
 			
 	}
-	
 
 }

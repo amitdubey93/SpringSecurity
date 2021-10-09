@@ -34,10 +34,13 @@
       </li>	
     </ul>
     <a class="nav-link" href="<c:url value="/change-password" />">Change Password</a>
+    <button class="btn btn-danger" onclick="myFunction()">Delete
+		Account</button>
+	<div>
     <!--this is not working  -->
-    <%-- <c:if test="${param.logout==null}">
-    <%@ include file="./logout.jsp" %>
-    </c:if> --%>
+    <c:if test="${param.logout==null}">
+    	<%@ include file="./logout.jsp" %>
+    </c:if>
     
   </div>
 </nav>

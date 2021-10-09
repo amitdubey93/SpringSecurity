@@ -13,12 +13,10 @@
 </head>
 <body>
 	<%@ include file="./header.jsp"%>
-	<a class="btn btn-danger" href="<c:url value="/deleteUser?username=${username}" />">Delete Account</a>
+	<%-- <a class="btn btn-danger" href="<c:url value="/deleteUser?username=${username}" onclick="confirm('Are you sure?')"/>">Delete Account</a> --%>
 	<div>
-		Hi ${username}
-		<br>
-		roles ${authorities}
+		Hi ${username} <br> roles ${authorities}
 	</div>
+	<p id="demo"></p>
 
 </body>
-</html>

@@ -1,7 +1,5 @@
 package org.h2o.config;
 
-import java.util.Locale;
-
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -37,6 +35,13 @@ public class AppConfig implements WebMvcConfigurer {
 	@Bean
 	public JdbcUserDetailsManager jdbcUserDetailsManager() {
 		JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource());
+//		jdbcUserDetailsManager.setUsersByUsernameQuery("select username,password,enabled from user_details where username=?");
+//		jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("select username,role from user_roles where username=?");
+//		jdbcUserDetailsManager.setCreateUserSql("insert into user_details(username, password, enabled) values (?,?,?)");
+//		jdbcUserDetailsManager.setCreateAuthoritySql("insert into user_roles(username,role) values (?,?)");
+//		jdbcUserDetailsManager.setChangePasswordSql("update user_details set password=? where username=?");
+//		jdbcUserDetailsManager.setDeleteUserSql("delete from user_details where username=?");
+//		jdbcUserDetailsManager.setDeleteUserAuthoritiesSql("delete from user_roles where username=?");
 		return jdbcUserDetailsManager;
 	}
 	

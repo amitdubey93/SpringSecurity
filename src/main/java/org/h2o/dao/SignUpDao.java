@@ -1,7 +1,7 @@
 package org.h2o.dao;
 
-import org.h2o.domain.SignUpDTO;
+import org.h2o.domain.UserDetails;
 
 public interface SignUpDao {
-	void saveUser(SignUpDTO signUpDto);
+	void saveUser(UserDetails signUpDto);
 }

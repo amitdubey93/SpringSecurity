@@ -1,6 +1,9 @@
 package org.h2o.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -23,6 +26,8 @@ import java.util.Collection;
 import org.h2o.dao.impl.SignUpDaoImpl;
 import org.h2o.domain.ChangePasswordDTO;
 import org.h2o.domain.SignUpDTO;
+import org.h2o.service.MyJdbcUserDetailsManager;
+import org.h2o.service.UserDetailsServiceImpl;
 
 @Controller
 public class MyController {
@@ -30,8 +35,11 @@ public class MyController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+//	@Autowired
+//	private JdbcUserDetailsManager jdbcUserDetailsManager;
+	
 	@Autowired
-	private JdbcUserDetailsManager jdbcUserDetailsManager;
+	private MyJdbcUserDetailsManager myJdbcUserDetailsManager;
 	
 	
 	@Autowired
@@ -82,17 +90,17 @@ public class MyController {
 	}
 	
 	@GetMapping("/signup")
-	public String signup(@ModelAttribute("signupdto") SignUpDTO signupdto) {
+	public String signup(@ModelAttribute("signupdto") org.h2o.domain.UserDetails signupdto) {
 		return "signup";
 	}
 	
 	@PostMapping("/process-signup")
-	public String processSignup(SignUpDTO signUpDto) {
+	public String processSignup(org.h2o.domain.UserDetails signUpDto) {
 		
 		signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-		//signupDaoImpl.saveUser(signUpDto);
-		UserDetails user = User.withUsername(signUpDto.getUsername()).password(signUpDto.getPassword()).authorities("USER").build();
-		jdbcUserDetailsManager.createUser(user);
+		signupDaoImpl.saveUser(signUpDto);
+//		UserDetails user = User.withUsername(signUpDto.getUsername()).password(signUpDto.getPassword()).authorities("USER").build();
+//		jdbcUserDetailsManager.createUser(user);
 		
 		System.out.println(signUpDto);
 		return "redirect:login";
@@ -107,16 +115,19 @@ public class MyController {
 	@PostMapping("/process-change-password")
 	public String processChangePassword(Principal principal, ChangePasswordDTO cpdto) {
 		String newEncodedPassword = passwordEncoder.encode(cpdto.getNewPassword());
-		UserDetails user = jdbcUserDetailsManager.loadUserByUsername(principal.getName());
+		
+//		UserDetails user = jdbcUserDetailsManager.loadUserByUsername(principal.getName());
+		UserDetails user = myJdbcUserDetailsManager.loadUserByUsername(principal.getName());
 		boolean matches = passwordEncoder.matches(cpdto.getOldPassword(), user.getPassword());
 		
 		//if newpassword and confirmpassword matches
 		if(!cpdto.getNewPassword().equals(cpdto.getConfirmPassword())) {
-			return "redirect:change-password?error=password mismatch";
+			return "redirect:change-password?error=Password mismatch";
 		}
 		//if users password matches with database
 		if(matches) {
-			jdbcUserDetailsManager.changePassword(cpdto.getOldPassword(), newEncodedPassword);
+//			jdbcUserDetailsManager.changePassword(cpdto.getOldPassword(), newEncodedPassword);
+			myJdbcUserDetailsManager.changePassword(cpdto.getOldPassword(), newEncodedPassword);
 			return "redirect:login";
 		}
 		return "redirect:change-password?error=Old password is not correct!!";
@@ -124,14 +135,17 @@ public class MyController {
 	
 	//changePassword
 	@GetMapping("/deleteUser{username}")
-	public String deleteUser(@RequestParam String username) {
-		jdbcUserDetailsManager.deleteUser(username);
-		return "redirect:/home";
+	public String deleteUser(@RequestParam String username) throws Exception {
+		System.out.println(username);
+		//jdbcUserDetailsManager.deleteUser(username);
+		myJdbcUserDetailsManager.deleteUser(username);
+		//http.logout();
+		return "redirect:login?logout";
 	}
 	
 	@RequestMapping("/accessdenied")
 	public String accessdenied() {
-		return "404";
+		return "access-denied";
 	}
 	
 	/*@RequestMapping("/logout")
